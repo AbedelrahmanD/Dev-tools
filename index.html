@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        html{
+            scroll-behavior: smooth;
+           
+        }
+        .books_slider_carousel{
+         display: flex;
+            margin-left:10%;
+            margin-right:10%;
+           overflow-x: hidden;
+           overflow-y: hidden;
+           gap: 2%;
+           
+        }
+        .item_container{
+            width: 100px;
+            flex-shrink: 0;
+        }
+        .item_container img{
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        var i=0;
+    function moveNext(){
+        $('#scrollbar').stop().animate({scrollLeft: "+=300"}, 300);
+      
+       
+    }
+    function movePrev(){
+        $('#scrollbar').stop().animate({scrollLeft: "-=300"}, 300);
+      
+       
+    }
+ 
+</script>
+    
+</head>
+<body>
+    <center>
+    <div id="scrollbar" class="books_slider_carousel">
+        <div class="item_container">
+            <img src="file.jpg"/>
+        </div>
+        <div class="item_container">
+            <img src="file(1).jpg"/>
+        </div>
+        <div class="item_container">
+            <img src="file.jpg"/>
+        </div>
+        <div class="item_container">
+            <img src="file.jpg"/>
+        </div>
+        <div class="item_container">
+            <img src="file(1).jpg"/>
+        </div>
+        <div class="item_container">
+            <img src="file.jpg"/>
+        </div>
+        <div class="item_container">
+            <img src="file.jpg"/>
+        </div>
+        <div class="item_container">
+            <img src="file.jpg"/>
+        </div>
+        <div class="item_container">
+            <img src="file.jpg"/>
+        </div>
+        <div class="item_container">
+            <img src="file.jpg"/>
+        </div>
+        <div class="item_container">
+            <img src="file.jpg"/>
+        </div>
+        <div class="item_container">
+            <img src="file.jpg"/>
+        </div>
+        <div class="item_container">
+            <img src="file.jpg"/>
+        </div>
+        <div class="item_container">
+            <img src="file.jpg"/>
+        </div>
+        <div class="item_container">
+            <img src="file.jpg"/>
+        </div>
+        <div class="item_container">
+            <img src="file(1).jpg"/>
+        </div>
+        <div class="item_container">
+            <img src="file(1).jpg"/>
+        </div>
+        <div class="item_container">
+            <img src="file(1).jpg"/>
+        </div>
+    </div>
+    </center>
+<input type="button" value="next" onclick="moveNext()"/>
+<input type="button" value="prev" onclick="movePrev()"/>
+   
+<div class="showi">
+
+</div>
+
+
+
+</body>
+</html>

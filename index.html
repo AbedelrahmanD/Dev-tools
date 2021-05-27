@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BX SLIDER</title>
+    <link
+      rel="stylesheet"
+      href="bx_slider.css"
+    />
+    <style>
+        body{
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="slider">
+        <div  class="bxSlideContainer">        
+            <h1  class="bxSlideContainerTitle">
+                Title one
+            </h1>
+            <div class="overLay"></div>
+        </div>
+      <div  class="bxSlideContainer">       
+        <div class="overLay"></div> 
+          <h1  class="bxSlideContainerTitle">
+              Title Two
+          </h1>    
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="js/boxSlider.js"></script>
+    <script>
+      $(document).ready(function () {
+        $(".slider").bxSlider({
+            auto:true,
+            mode: 'fade',     
+            //pause:6000
+        });
+      });
+    </script>
+  </body>
+</html>

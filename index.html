@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Switch</title>
+    <style>
+      .switch {
+        display: flex;
+        border: 1px solid grey;
+        border-radius: 100px;
+        width: 50px;
+        height: 25px;
+        cursor: pointer;
+        transition: all 1s;
+      }
+      .switch .switch-circle {
+        height: 25px;
+        width: 25px;
+        border-radius: 100%;
+        box-shadow: 1px 1px 5px grey;
+        background-color: white;
+        transition: all 0.5s;
+      }
+      .switch-background-on {
+        background-color: #37ce37;
+      }
+      .switch-background-off {
+        background-color: rgb(223, 223, 223);
+      }
+      .switch-off {
+        transform: translateX(0px);
+       
+      }
+      .switch-on {
+        transform: translateX(25px);
+       
+      }
+    </style>
+  </head>
+  <body>
+    <div class="switch  switch-background-on">
+      <div class="switch-circle switch-on"></div>
+      <input type="hidden" value="1" />
+    </div>
+    <br />
+    <div class="switch switch-background-off ">
+      <div class="switch-circle switch-off"></div>
+      <input type="hidden" value="0" />
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      $(".switch").click(function () {
+        var switchInput = $(this).find("input[type='hidden']");
+        var switchCircle = $(this).find(".switch-circle");
+        if (switchInput.val() == 0) {
+          switchInput.val(1);
+          $(this).removeClass("switch-background-off");
+          $(this).addClass("switch-background-on");
+          switchCircle.removeClass("switch-off");
+          switchCircle.addClass("switch-on");
+        } else {
+          switchInput.val(0);
+          $(this).addClass("switch-background-off");
+          $(this).removeClass("switch-background-on");
+          switchCircle.removeClass("switch-on");
+          switchCircle.addClass("switch-off");
+        }
+      });
+    </script>
+  </body>
+</html>

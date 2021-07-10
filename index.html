@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      .cm-slider-images-and-buttons-container {
+        width: 100%;
+        height: 100vh;
+        position: relative;
+      }
+      .cm-slider-images-container,
+      .cm-slider-image-container {
+        width: 100%;
+        height: 100%;
+      }
+      .cm-slider-images-container {
+        display: flex;
+        overflow: hidden;
+      }
+      .cm-slider-image-container {
+        flex-shrink: 0;
+      }
+      .cm-slider-image-container img {
+        width: 100%;
+        height: 100%;
+      }
+      .cm-slider-buttons {
+        position: absolute;
+        top: 40%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+        outline: none;
+        border: none;
+        border-radius: 100%;
+        width: 50px;
+        height: 50px;
+        background-color: black;
+        color: white;
+        font-weight: bold;
+        opacity: 0.5;
+        cursor: pointer;
+      }
+      .cm-slider-buttons:focus {
+        opacity: 1;
+      }
+      .cm-slider-next {
+        right: 1px;
+      }
+      .cm-slider-prev {
+        left: 1px;
+      }
+      .cm-slider-dots-container {
+        position: absolute;
+        bottom: 1px;
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin: auto;
+        left: 0;
+        right: 0;
+        width: 100%;
+      }
+      .cm-slider-dot {
+        width: 20px;
+        height: 20px;
+        border-radius: 100%;
+        background-color: white;
+      }
+      .cm-slider-dot-active {
+        background-color: black;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="cm-slider-images-and-buttons-container">
+      <div class="cm-slider-images-container">
+        <div class="cm-slider-image-container">
+          <img id="cmSliderImage_1" src="1.jpg" alt="" />
+        </div>
+        <div class="cm-slider-image-container">
+          <img id="cmSliderImage_2" src="2.jpg" alt="" />
+        </div>
+        <div class="cm-slider-image-container">
+          <img id="cmSliderImage_3" src="3.jpg" alt="" />
+        </div>
+      </div>
+
+      <button id="cmNext" class="cm-slider-buttons cm-slider-next">next</button>
+      <button id="cmPrev" class="cm-slider-buttons cm-slider-prev">prev</button>
+
+      <div id="aq" class="cm-slider-dots-container">
+        <div
+          id="cmSliderDot_1"
+          class="cm-slider-dot cm-slider-dot-active"
+        ></div>
+        <div id="cmSliderDot_2" class="cm-slider-dot"></div>
+        <div id="cmSliderDot_3" class="cm-slider-dot"></div>
+      </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      $(function () {
+        var cmSliderImageNumber = 1;
+        function cmSliderMove(element, direction) {
+          var sliderParent = $(element).parent();
+          var slider = sliderParent.find(".cm-slider-images-container");
+          var images = slider.find(".cm-slider-image-container");
+
+          var width = sliderParent.width();
+          if (direction == "next") {
+            if (cmSliderImageNumber < images.length) {
+              cmSliderImageNumber++;
+              slider.animate({ scrollLeft: "+=" + width }, 500);
+            }
+          } else {
+            if (cmSliderImageNumber > 1) {
+              cmSliderImageNumber--;
+              slider.animate({ scrollLeft: "-=" + width }, 500);
+            }
+          }
+
+          var cmSliderDotID = "#cmSliderDot_" + cmSliderImageNumber;
+          $(".cm-slider-dot").removeClass("cm-slider-dot-active");
+          $(cmSliderDotID).addClass("cm-slider-dot-active");
+        }
+        $("#cmNext").click(function () {
+          cmSliderMove(this, "next");
+        });
+        $("#cmPrev").click(function () {
+          cmSliderMove(this, "prev");
+        });
+      });
+    </script>
+  </body>
+</html>

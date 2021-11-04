@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Dynamic Form Validation</title>
+
+    <style>
+        .requiredMessage {
+            /* hide error message by default*/
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <form id="form1" action="#">
+        <div>
+            <input autocomplete="on" id="optional" type="text" placeholder="optional">
+        </div>
+        <div>
+            <!--class="required" is used to make the field required-->
+            <!--Give the inpit id-->
+            <!--The error message must have class="requiredMessage" and id the same as its input concat with "_required"-->
+            <!--The validation is done depending o the type text,email,password,number-->
+            <input autocomplete="on" id="jsUsername" type="text" placeholder="username" class="required">
+            <div id="jsUsername_required" class="requiredMessage">Username is required</div>
+        </div>
+        <!-- type="email"-->
+        <div>
+            <input autocomplete="on" id="jsEmail" type="email" placeholder="email" class="required">
+            <div id="jsEmail_required" class="requiredMessage">Email format is wrong</div>
+        </div>
+        <!-- type="number"-->
+        <div>
+            <input autocomplete="on" id="jsPhone" type="number" placeholder="phone" class="required">
+            <div id="jsPhone_required" class="requiredMessage">Phone must contains numbers only</div>
+        </div>
+        <!-- select is like type="text"-->
+        <div>
+            <select id="jsCountry" class="required">
+                <option value=""></option>
+                <option value="1">country 1</option>
+                <option value="2">country 2</option>
+            </select>
+            <div id="jsCountry_required" class="requiredMessage">Select country</div>
+        </div>
+
+        <!-- put input radio inside dive of type="radioGroup"-->
+        <div>
+            type
+            <div id="jsType" class="required" type="radioGroup">
+                <input type="radio" name="type" value="type1">type1
+                <input type="radio" name="type" value="type2">type2
+            </div>
+            <div id="jsType_required" class="requiredMessage">Choose type</div>
+        </div>
+        <!-- type="checkbox"-->
+        <div>
+            Agree <input id="jsAgree" type="checkbox" class="required">
+            <div id="jsAgree_required" class="requiredMessage">You need to agree ya fool!!!</div>
+        </div>
+
+        <button id="jsSubmit" type="submit">submit</button>
+    </form>
+
+
+    <script>
+        $(function () {
+            $("#jsSubmit").click(function (e) {
+                e.preventDefault();
+                var result = validateForm("#form1");
+            });
+        });
+
+        function validateForm(id) {
+            var valid = true;
+            var inputs = $(id + " .required");
+            inputs.map(function (index, input) {
+                var type = $(input).attr("type");
+                var id = $(input).attr("id");
+                var value = $(input).val().trim();
+                var result;
+                if (type == "email") {
+                    result = validateEmail(value);
+                }
+                else if (type == "number") {
+                    result = validatePhone(value);
+                } else if (type == "checkbox") {
+                    result = validateCheckBox("#" + id);
+                } else if (type == "radioGroup") {
+                    result = validateRadioGroup("#" + id);
+                }
+                else {
+                    result = validateText(value);
+                }
+                var messageClass = "#" + id + "_required";
+
+                if (result) {
+                    $(messageClass).hide();
+                }
+                else {
+                    valid = false;
+                    $(messageClass).show();
+                }
+
+
+            });
+            return valid;
+
+        }
+
+        function validateRadioGroup(id) {
+            var radios = $(id + " input[type=radio]:checked").val();
+            if (!radios) {
+                return false;
+            }
+            return true
+
+        }
+
+        function validateCheckBox(id) {
+            if ($(id).is(':checked')) {
+                return true;
+            }
+            return false;
+
+        }
+
+        function validatePhone(phone) {
+            var numberRegx = /^[0-9]{8,}$/;
+            if (numberRegx.test(phone)) {
+                return true;
+            }
+            return false;
+        }
+
+        function validateEmail(email) {
+            var emailRegx = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+            if (emailRegx.test(email)) {
+                return true;
+            }
+            return false;
+        }
+
+        function validateText(text) {
+            if (text.trim() == "") {
+                return false;
+            }
+            return true;
+        }
+    </script>
+</body>
+
+</html>

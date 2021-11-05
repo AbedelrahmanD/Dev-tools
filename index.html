@@ -1,5 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+<!--  How to use?
+    
+    #if input is required:
+     1- create input and give it class="jsRequiredInput  styleClassInput"
+     2-give it id
+     3-to show error message:create element with class="requiredMessage" and is the same as its input but concat with "_required"
+     
+     #if input is not required
+      - don't add  class="jsRequiredInput  styleClassInput"
+
+-->
 
 <head>
     <meta charset="UTF-8">
@@ -9,9 +20,43 @@
     <title>Dynamic Form Validation</title>
 
     <style>
+        /* style for design*/
+        body {
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            min-height: 90vh;
+        }
+
+        .styleClassInput {
+            border-radius: 8px;
+            padding: 10px;
+            margin: 10px 0px;
+            border: 1px solid rgb(189, 189, 189);
+            width: 250px;
+        }
+
+        button {
+            width: 250px;
+            border-radius: 8px;
+            background-color: rgb(119, 0, 255);
+            color: white;
+            padding: 10px;
+            border: 1px solid rgb(189, 189, 189);
+            ;
+        }
+
+        /* include style*/
         .requiredMessage {
             /* hide error message by default*/
             display: none;
+            color: red;
+            margin-bottom: 10px;
+            margin-top: -10px;
         }
     </style>
 </head>
@@ -20,29 +65,41 @@
 
     <form id="form1" action="#">
         <div>
-            <input autocomplete="on" id="optional" type="text" placeholder="optional">
+            <input autocomplete="on" id="optional" type="text" placeholder="optional" class="styleClassInput">
         </div>
         <div>
             <!--class="required" is used to make the field required-->
             <!--Give the inpit id-->
             <!--The error message must have class="requiredMessage" and id the same as its input concat with "_required"-->
             <!--The validation is done depending o the type text,email,password,number-->
-            <input autocomplete="on" id="jsUsername" type="text" placeholder="username" class="required">
+            <!-- you cant change class="jsRequiredInput  styleClassInput" because it is used the validateForm function -->
+            <!--class="requiredMessage" is used only to hide error messages by default-->
+            <input autocomplete="on" id="jsUsername" type="text" placeholder="username"
+                class="jsRequiredInput  styleClassInput">
             <div id="jsUsername_required" class="requiredMessage">Username is required</div>
         </div>
         <!-- type="email"-->
         <div>
-            <input autocomplete="on" id="jsEmail" type="email" placeholder="email" class="required">
+            <input autocomplete="on" id="jsEmail" type="email" placeholder="email"
+                class="jsRequiredInput  styleClassInput">
             <div id="jsEmail_required" class="requiredMessage">Email format is wrong</div>
+        </div>
+        <!-- type="password"-->
+        <div>
+            <input autocomplete="on" id="jsPassword" type="password" placeholder="password"
+                class="jsRequiredInput  styleClassInput">
+            <div id="jsPassword_required" class="requiredMessage">password must contans capital letter, small letter,
+                number and at least 8 charachters</div>
         </div>
         <!-- type="number"-->
         <div>
-            <input autocomplete="on" id="jsPhone" type="number" placeholder="phone" class="required">
+            <input autocomplete="on" id="jsPhone" type="number" placeholder="phone"
+                class="jsRequiredInput  styleClassInput">
             <div id="jsPhone_required" class="requiredMessage">Phone must contains numbers only</div>
         </div>
         <!-- select is like type="text"-->
         <div>
-            <select id="jsCountry" class="required">
+            <select id="jsCountry" class="jsRequiredInput  styleClassInput">
                 <option value=""></option>
                 <option value="1">country 1</option>
                 <option value="2">country 2</option>
@@ -51,7 +108,7 @@
         </div>
         <!--textarea is like type="text"-->
         <div>
-            <textarea id="jsAddress" cols="30" rows="10" class="required"></textarea>
+            <textarea id="jsAddress" cols="30" rows="10" class="jsRequiredInput  styleClassInput"></textarea>
             <div id="jsAddress_required" class="requiredMessage">Address is required </div>
         </div>
 
@@ -59,7 +116,7 @@
         <!-- put input radio inside dive of type="radioGroup"-->
         <div>
             type
-            <div id="jsType" class="required" type="radioGroup">
+            <div id="jsType" class="jsRequiredInput  styleClassInput" type="radioGroup">
                 <input type="radio" name="type" value="type1">type1
                 <input type="radio" name="type" value="type2">type2
             </div>
@@ -67,7 +124,7 @@
         </div>
         <!-- type="checkbox"-->
         <div>
-            Agree <input id="jsAgree" type="checkbox" class="required">
+            Agree <input id="jsAgree" type="checkbox" class="jsRequiredInput  styleClassInput">
             <div id="jsAgree_required" class="requiredMessage">You need to agree ya fool!!!</div>
         </div>
 
@@ -79,13 +136,20 @@
         $(function () {
             $("#jsSubmit").click(function (e) {
                 e.preventDefault();
+                //call the function validateForm and pass the id of the form
                 var result = validateForm("#form1");
+                if (result == false) {
+                    return
+                } else {
+                    //ajax request
+                }
             });
         });
 
+        /*########## include script ##########*/
         function validateForm(id) {
             var valid = true;
-            var inputs = $(id + " .required");
+            var inputs = $(id + " .jsRequiredInput");
             inputs.map(function (index, input) {
                 var type = $(input).attr("type");
                 var id = $(input).attr("id");
@@ -94,8 +158,11 @@
                 if (type == "email") {
                     result = validateEmail(value);
                 }
+                else if (type == "password") {
+                    result = validatePassword(value);
+                }
                 else if (type == "number") {
-                    result = validatePhone(value);
+                    result = (validateNumber(value) && value.length >= 8);
                 } else if (type == "checkbox") {
                     result = validateCheckBox("#" + id);
                 } else if (type == "radioGroup") {
@@ -120,14 +187,35 @@
 
         }
 
-        function validateRadioGroup(id) {
-            var radios = $(id + " input[type=radio]:checked").val();
-            if (!radios) {
-                return false;
+        function validateEmail(email) {
+            var emailRegx = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+            if (emailRegx.test(email)) {
+                return true;
             }
-            return true
+            return false;
+        }
+
+        function validatePassword(password) {
+            var smallLettersRegx = /[a-z]/;
+            var capitalLettersRegx = /[A-Z]/;
+            var numberRegx = /[0-9]/;
+
+            return (smallLettersRegx.test(password) &&
+                capitalLettersRegx.test(password) &&
+                numberRegx.test(password) &&
+                password.length >= 8
+            );
 
         }
+
+        function validateNumber(phone) {
+            var numberRegx = /^[0-9]{1,}$/;
+            if (numberRegx.test(phone)) {
+                return true;
+            }
+            return false;
+        }
+
 
         function validateCheckBox(id) {
             if ($(id).is(':checked')) {
@@ -137,20 +225,13 @@
 
         }
 
-        function validatePhone(phone) {
-            var numberRegx = /^[0-9]{8,}$/;
-            if (numberRegx.test(phone)) {
-                return true;
+        function validateRadioGroup(id) {
+            var radios = $(id + " input[type=radio]:checked").val();
+            if (!radios) {
+                return false;
             }
-            return false;
-        }
+            return true
 
-        function validateEmail(email) {
-            var emailRegx = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-            if (emailRegx.test(email)) {
-                return true;
-            }
-            return false;
         }
 
         function validateText(text) {
@@ -159,6 +240,7 @@
             }
             return true;
         }
+   /* ##########################################*/
     </script>
 </body>
 

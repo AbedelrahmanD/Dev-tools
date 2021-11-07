@@ -17,7 +17,7 @@ if (
     isset($data["record"])
 ) {
 
-    include("sql.php");
+    include("sql/sql.php");
 
     $sql = new Sql();
     $tableName = $data["tableName"];

@@ -25,7 +25,7 @@ if (
     isset($data["conditions"])
 ) {
 
-    include("sql.php");
+    include("sql/sql.php");
 
     $sql = new Sql();
     $tableName = $data["tableName"];

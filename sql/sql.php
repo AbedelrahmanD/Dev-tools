@@ -14,16 +14,14 @@ class Sql extends connect
     public  function pdoInsert($tableName, $record)
     {
 
-        //pdo way
-
         $fields = array();
         $values = array();
         $params = array();
 
-        foreach ($record as $key => $val) {
-            $fields[] = $key;
-            $values[] = $val;
-            $params[] = ":" . $key;
+        foreach ($record as $rec) {
+            $fields[] = $rec["field"];
+            $values[] = $rec["value"];
+            $params[] = ":" . $rec["field"];
         }
         $allFields = implode(",", $fields);
         $allParams = implode(",", $params);
@@ -44,10 +42,10 @@ class Sql extends connect
             $response["status"] = "success";
             $response["id"] = $insertedId;
         } else {
-            $response["status"] = "failure";
+            $response["status"] = "failed";
         }
 
-        echo json_encode($response);
+        return $response;
     }
 
     public function pdoUpdate($tableName, $record, $conditions)
@@ -57,13 +55,13 @@ class Sql extends connect
         $counter = 0;
         $params = array();
         $values = array();
-        foreach ($record as $key => $val) {
+        foreach ($record as $rec) {
             $counter++;
-            $field = $key;
+            $field = $rec["field"];
             $bindParam = ":" . $field;
             $params[] = $bindParam;
-            $values[] = $val;
-            $sql .= "$field=$bindParam ";
+            $values[] = $rec["value"];
+            $sql .= "$field = $bindParam ";
 
             if ($counter < count($record)) {
                 $sql .= ", ";
@@ -77,8 +75,7 @@ class Sql extends connect
             $params[] = $bindParam;
             $searchCondition = $condition["condition"];
             $values[] = $condition["value"];
-
-            $sql .= " and $field $searchCondition $bindParam";
+            $sql .= " and $field $searchCondition $bindParam ";
         }
 
         $stmt = $this->conn->prepare($sql);
@@ -93,9 +90,9 @@ class Sql extends connect
         if ($stmt->rowCount() > 0) {
             $response["status"] = "success";
         } else {
-            $response["status"] = "failure";
+            $response["status"] = "failed";
         }
-        echo json_encode($response);
+        return $response;
     }
 
 
@@ -123,7 +120,7 @@ class Sql extends connect
         $response = array(
             "status" => "success"
         );
-        echo json_encode($response);
+        return $response;
     }
 
 
@@ -155,43 +152,6 @@ class Sql extends connect
         $stmt->execute();
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $result = $stmt->fetchAll();
-        echo json_encode($result);
+        return $result;
     }
 }
-
-// $record = array(
-//     "general_user_username" => "joe",
-//     "general_user_country" => 3,
-//     "general_user_account_date" => date("Y-m-d h:i:s"),
-// );
-
-// $conditions = array(
-//     array(
-//         "field" => "general_user_username",
-//         "condition" => "=",
-//         "value" => "yugi"
-//     ),
-// );
-
-// $sql = new Sql();
-
-// //$sql->pdoInsert("general_user", $record); //insert done
-
-
-// //$sql->pdoUpdate("general_user", $record, $conditions); //update done
-
-// //$sql->pdoDelete("general_user", $conditions); //delete done
-
-// $fields = array(
-//     "general_user_username"
-// );
-// $condition = array(
-//     array(
-//         "field" => "general_user_username",
-//         "condition" => "=",
-//         "value" => "joe"
-//     ),
-
-// );
-
-// $sql->pdoSelect("general_user", $fields, $condition);// select done

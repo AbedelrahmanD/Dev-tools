@@ -7,15 +7,11 @@ class connect
 
     public static function connectToDb()
     {
+        include("../definitions.php");
         $servername = "localhost";
-        $username = "root";
-        $password = "";
-        $db = "general";
 
         // Create connection
-        $conn = new mysqli($servername, $username, $password, $db);
-
-
+        $conn = new mysqli($servername, $dbUsername, $dbPassword, $dbName);
         return $conn;
     }
 

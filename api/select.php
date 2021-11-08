@@ -25,11 +25,12 @@ if (
     isset($data["conditions"])
 ) {
 
-    include("sql/sql.php");
+    include("../sql/sql.php");
 
     $sql = new Sql();
     $tableName = $data["tableName"];
     $fields = $data["fields"];
     $conditions = $data["conditions"];
-    $sql->pdoSelect($tableName, $fields, $conditions);
+    $response = $sql->pdoSelect($tableName, $fields, $conditions);
+    echo json_encode($response);
 }
